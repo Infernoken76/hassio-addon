@@ -8,7 +8,7 @@ RUN npm ci
 RUN npm run build
 
 # Stap 2: Bouw de Go-applicatie (Backend) en voeg alles samen
-FROM golang:1.23-alpine AS backend-builder
+FROM golang:1.24-alpine AS backend-builder
 RUN apk add --no-cache git gcc musl-dev
 WORKDIR /go/src/github.com/evcc-io/evcc
 COPY --from=frontend-builder /app /go/src/github.com/evcc-io/evcc
