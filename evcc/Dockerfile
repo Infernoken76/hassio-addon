@@ -28,8 +28,8 @@ RUN go mod download
 # Kopieer nu pas de rest van de broncode (inclusief de net gebouwde frontend)
 COPY --from=frontend-builder /app /go/src/github.com/evcc-io/evcc
 
-# Bouw de uiteindelijke evcc binary
-RUN go build -ldflags="-s -w" -o evcc .
+# Bouw de uiteindelijke evcc binary met de release tag (dit neemt de webbestanden mee)
+RUN go build -ldflags="-s -w" -tags release -o evcc .
 
 # Stap 3: Het uiteindelijke compacte Home Assistant Add-on image
 FROM alpine:latest
