@@ -3,8 +3,10 @@ FROM node:20-alpine AS frontend-builder
 RUN apk add --no-cache git
 WORKDIR /app
 
-# --- WIJZIGING HIER: We voegen een onschuldig argument toe om de cache te breken ---
-ARG CACHE_BUST=1
+# --- HIER BREKEN WE DE CACHE VOOR DE CODE VAN GITHUB ---
+# Door een unieke waarde mee te geven (zoals v1.1), dwingen we Docker om vanaf hier 
+# de cache te negeren en de allernieuwste hardware.go op te halen.
+ARG CACHE_VERSION=v1.1
 RUN git clone --depth 1 https://github.com/Infernoken76/evcc.git .
 
 WORKDIR /app/web
