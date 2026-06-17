@@ -1,41 +1,28 @@
-# Stap 1: Bouw de web-interface (Frontend)
+# Stap 1: Frontend
 FROM node:20-alpine AS frontend-builder
 RUN apk add --no-cache git
 WORKDIR /app
-
-# --- HIER BREKEN WE DE CACHE VOOR DE CODE VAN GITHUB ---
-# Door een unieke waarde mee te geven (zoals v1.1), dwingen we Docker om vanaf hier 
-# de cache te negeren en de allernieuwste hardware.go op te halen.
-ARG CACHE_VERSION=v1.1
+ARG CACHE_VERSION=v1.2
 RUN git clone --depth 1 https://github.com/Infernoken76/evcc.git .
-
 WORKDIR /app/web
 RUN npm ci
 RUN npm run build
 
-# Stap 2: Bouw de Go-applicatie (Backend) en voeg alles samen
+# Stap 2: Backend
 FROM golang:1.26-alpine AS backend-builder
 RUN apk add --no-cache git gcc musl-dev linux-headers
 WORKDIR /go/src/github.com/evcc-io/evcc
-
-# Kopieer specifiek alleen de module-bestanden uit de frontend-builder
-COPY --from=frontend-builder /app/go.mod /go/src/github.com/evcc-io/evcc/
-COPY --from=frontend-builder /app/go.sum /go/src/github.com/evcc-io/evcc/
-
-# Download alle Go-dependencies 
+COPY --from=frontend-builder /app/go.mod /app/go.sum ./
 RUN go mod download
-
-# Kopieer nu pas de rest van de broncode (inclusief de net gebouwde frontend)
-COPY --from=frontend-builder /app /go/src/github.com/evcc-io/evcc
-
-# Bouw de uiteindelijke evcc binary met de release tag (dit neemt de webbestanden mee)
+COPY --from=frontend-builder /app .
 RUN go build -ldflags="-s -w" -tags release -o evcc .
 
-# Stap 3: Het uiteindelijke compacte Home Assistant Add-on image
+# Stap 3: Final
 FROM alpine:latest
 RUN apk add --no-cache tzdata ca-certificates
+WORKDIR /opt/evcc
 COPY --from=backend-builder /go/src/github.com/evcc-io/evcc/evcc /usr/local/bin/evcc
+COPY --from=backend-builder /go/src/github.com/evcc-io/evcc/i18n /opt/evcc/i18n
 
-# Start EVCC automatisch op met de Home Assistant configuratie
 ENTRYPOINT ["evcc"]
 CMD ["--config", "/config/evcc.yaml"]
