@@ -2,14 +2,17 @@
 FROM node:20-alpine AS frontend-builder
 RUN apk add --no-cache git
 WORKDIR /app
+
+# --- WIJZIGING HIER: We voegen een onschuldig argument toe om de cache te breken ---
+ARG CACHE_BUST=1
 RUN git clone --depth 1 https://github.com/Infernoken76/evcc.git .
+
 WORKDIR /app/web
 RUN npm ci
 RUN npm run build
 
 # Stap 2: Bouw de Go-applicatie (Backend) en voeg alles samen
 FROM golang:1.26-alpine AS backend-builder
-# --- WIJZIGING HIER: linux-headers toegevoegd aan de lijst ---
 RUN apk add --no-cache git gcc musl-dev linux-headers
 WORKDIR /go/src/github.com/evcc-io/evcc
 
@@ -17,7 +20,7 @@ WORKDIR /go/src/github.com/evcc-io/evcc
 COPY --from=frontend-builder /app/go.mod /go/src/github.com/evcc-io/evcc/
 COPY --from=frontend-builder /app/go.sum /go/src/github.com/evcc-io/evcc/
 
-# Download alle Go-dependencies (dit krijgt nu een eigen, schone 3-minuten timer)
+# Download alle Go-dependencies 
 RUN go mod download
 
 # Kopieer nu pas de rest van de broncode (inclusief de net gebouwde frontend)
