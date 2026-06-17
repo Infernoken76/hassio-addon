@@ -32,4 +32,6 @@ COPY --from=backend-builder /go/src/github.com/evcc-io/evcc/i18n /opt/evcc/i18n
 # We dwingen de container om jouw evcc.yaml in de map /data te lezen
 # (Home Assistant koppelt jouw addon_configs map automatisch aan /data)
 # We wijzen de container naar het configuratiebestand in de nieuwe map
-ENTRYPOINT ["/bin/sh", "-c", "evcc --config /share/evcc/evcc.yaml"]
+# Gebruik ENTRYPOINT voor het commando en CMD voor de extra argumenten
+ENTRYPOINT ["evcc"]
+CMD ["--config", "/share/evcc/evcc.yaml"]
