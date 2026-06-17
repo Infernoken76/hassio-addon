@@ -1,8 +1,8 @@
 ---
-name: evcc
+name: EVCC Infernoken
 version: 0.309.1
-slug: evcc
-description: EV Charge Controller!
+slug: evcc_infernoken
+description: EV Charge Controller! (Infernoken Fork)
 url: https://github.com/Infernoken76/evcc
 arch: 
   - armhf
