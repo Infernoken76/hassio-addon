@@ -9,7 +9,7 @@ RUN npm ci
 RUN npm run build
 
 # Stap 2: Backend
-FROM golang:1.24-alpine AS backend-builder
+FROM golang:1.26-alpine AS backend-builder
 RUN apk add --no-cache git gcc musl-dev linux-headers wget && \
     wget -O /usr/local/share/ca-certificates/root-yr-by-x1.crt \
         https://letsencrypt.org/certs/gen-y/root-yr-by-x1.pem && \
