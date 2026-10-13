@@ -1,4 +1,11 @@
-Full release details: https://github.com/evcc-io/evcc/releases
+Custom EVCC fork: https://github.com/Infernoken76/evcc Custom releases: https://github.com/Infernoken76/evcc/releases
+
+[0.320.2] - 2026-10-13
+Infernoken custom changes
+Min+PV: when automatic phase switching is enabled, start charging on 1 phase at the configured minimum current.
+Preserve existing Fast charging behaviour.
+Preserve existing PV-only charging behaviour.
+Add unit test for Min+PV automatic 1-phase start.
 
 ## [0.320.1] - 2026-08-01
 * Merge Mercedes changes: Mercedes: remove broken odo, maxSoc and status (#32293)
