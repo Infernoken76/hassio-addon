@@ -1,6 +1,6 @@
 Custom EVCC fork: https://github.com/Infernoken76/evcc Custom releases: https://github.com/Infernoken76/evcc/releases
 
-[0.320.2] - 2026-10-13
+## [0.320.2] - 2026-10-13
 Infernoken custom changes
 Min+PV: when automatic phase switching is enabled, start charging on 1 phase at the configured minimum current.
 Preserve existing Fast charging behaviour.
